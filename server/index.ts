@@ -1,10 +1,12 @@
-import express = require('express');
+import * as express from 'express';
+import * as morgan from 'morgan';
 import * as authenticationModule from './authentication/';
-import * as paymentModule from './payment/';
+import * as customer from './customer/';
 
 const app = express();
 const prefix = '/api';
 
+app.use(morgan('dev'));
 app.use(express.json());
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -13,8 +15,8 @@ app.use((req, res, next) => {
 });
 app.all('*', (req, res, next) => setTimeout(() => next(), 0));
 
-app.use(prefix, authenticationModule);
-app.use(prefix, paymentModule);
+app.use('', authenticationModule);
+app.use(prefix, customer);
 
 app.get('/', (req, res) => {
     res.send({
@@ -22,4 +24,4 @@ app.get('/', (req, res) => {
     });
 });
 
-app.listen(6969);
+app.listen(3000);

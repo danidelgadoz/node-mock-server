@@ -1,19 +1,35 @@
 import { Router } from 'express';
+import { Authorization } from '../global';
 
 const router = Router();
+const auth = new Authorization();
 
 router.post('/oauth/token', (req, res) => {
     res.set('x-ratelimit-limit', '60');
     res.set('x-ratelimit-remaining', '59');
 
-    const happyPath = {
-        "token_type": "Bearer",
-        "expires_in": 31536000,
-        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijc2NWM3ZjZiOTA4Y2I4MTRlYWIyMzI4ZmI0ZDdlMGNlYTUyOGU4ZTFhMWJhMmQ4MTM3ODkyZTE5OTUxZGNhN2Y3MDIyNGRlNzNlM2VmNTA4In0.eyJhdWQiOiIyIiwianRpIjoiNzY1YzdmNmI5MDhjYjgxNGVhYjIzMjhmYjRkN2UwY2VhNTI4ZThlMWExYmEyZDgxMzc4OTJlMTk5NTFkY2E3ZjcwMjI0ZGU3M2UzZWY1MDgiLCJpYXQiOjE1NDYwNTg0NzYsIm5iZiI6MTU0NjA1ODQ3NiwiZXhwIjoxNTc3NTk0NDc2LCJzdWIiOiIxIiwic2NvcGVzIjpbIioiXX0.M7ON59NgI_fkmFCb8jPOtNw_nHg0TvT6fZrOQXX7tvYp-fRvLaMKhEmuA_TzwvrrAyB-3inHS3H9fsUXsbvnX9TUHNGw5qwFa83dZjLejzvQvNsmB7AU9QAacnOt-CcgjwiqtXOCNFW87YMU_i1yJgbzmDGlD0Jb3-eNNCKxnZ2x4Yh1JnBuQq9j3DEVM8e3OE2bkZV9xRjiBQ5ffDcbdjwdmN4-oWjGXRQCevk9IFGsJ0DmiLl8x3axm15HW0tBemZrL0Gk0C_kk2OdFuZY9ugNQwEbDBT9XUzljrfR2NuoVnSAea_Whz635ZNNBcyXrztkhacsgCkVsxv2Jlk9XzFPc67FMZliVcM6EWb6ZLt55cXO_YXFq7MXqeOWmGXDi8AH_RjI_lOnqMojnUIX_vmH_-x6_B6bkEKA1WxJoskgR9uMLFLGmavz1vrdU4sTGi46KZ2GWcJoxg36_lWMmmDsFCJvPryLSPN1HrPruy4V_MAFRpXduPp4aeSug3se-MIE3wYk498RzuoSz2YFFPiXdhIrxNt_y9MOHkQfgRwRjs3fgFiZS3R2TgzZVDiF7ksAP8kmbikAH-ABKAGFiMWrMwdM7xLVZf1b8FvsNtMUK882fxIBoTHYA3g4XuaMBUn6shWzYlkp0BVSE134NAUZoDs6fJ7UN5JuwrzGRTA",
-        "refresh_token": "def502007ff627e8b31e78989bbcb06af342a9949da7253b513c2ecc5514da519b582fcd9da6883cc083a173d40acafd36e20430bdb89413c79b63618353c2e1eca2276ed91f1a0c916d6866aec6b06db523a10cc4a08143d2d872240701bd41962ebc771b3b2110442ac1780c1786f7957ae5acc3c1e1b8a67f536d8030c826642ee25eb876b93e04db117a7a227cd7b73a59668d55a30aae281270811979b523aa0ad7e382260718c7ec035876ab8b630ff0d9f3c31bdbdf775e9d22664668c700c55066d22c7462a739fb0a736719e9a5b1f511535a6639bcbd7b4e531b45cbd1a3ab34318e0db523407ff755748f581b6890a1c3831d3a30d9eda836f98d5a6033d2e861689d78c8f2be96665204996c55260410ce61d5b81a1d44a9d9258cd97bc230c9ccb512b9036983ce353e995961935d8d5e1d904942c5b8802ab8bb30d2db5f365a493bba9d411f5911f11da5d55101031aa33151e048e15ac950fb828eae"
-    }
+    let validCredentialsResponse = require('./data/valid-credentials');
+    let badCredentialsResponse = require('./data/bad-credentials');
+    
+    if (req.body.grant_type === 'refresh_token') {
+        res.status(200).json(validCredentialsResponse);
 
-    res.status(200).json(happyPath);
+    } else {
+        switch (req.body.username) {
+            case 'invalid@gmail.com':
+                res.status(401).json(badCredentialsResponse);
+                break;
+            case 'refesh@gmail.com':
+                const response = Object.assign({}, validCredentialsResponse)
+                response['access_token'] = auth.tokenToForceUnauthorized;
+                res.status(200).json(response);
+                break;
+            default:
+            setTimeout(() => {
+                res.status(200).json(validCredentialsResponse);
+            }, 0)
+        }
+    }
 });
 
 module.exports = router;

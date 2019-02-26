@@ -26,3 +26,19 @@ export class HttpErrorBody {
     }
 }
 
+const tokenToForceUnauthorized = '66666666-6666-6666-6666-666666666666';
+
+export class Authorization {
+    get tokenToForceUnauthorized() {
+        return tokenToForceUnauthorized;
+    }
+
+    public validateSession(req, res, next): void {
+        if (req.headers['authorization'] === `Bearer ${tokenToForceUnauthorized}`) {
+            res.status(401).json();
+        } else {
+            next();
+        }
+    }
+}
+

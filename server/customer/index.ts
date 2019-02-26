@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { HttpErrorBody, HttpResponse } from '../global';
+import { HttpErrorBody, HttpResponse, Authorization } from '../global';
 
 const router = Router();
 const httpResponse = new HttpResponse();
+const auth = new Authorization();
 
 const customers = [
     {
@@ -62,7 +63,7 @@ const customers = [
     }
 ]; 
 
-router.get('/customer/', (req, res) => {
+router.get('/customer/', auth.validateSession, (req, res) => {
     const response = customers;
 
     res.json(httpResponse.success(response));

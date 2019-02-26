@@ -4,8 +4,8 @@
   "description": "mockserver test",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:mock": "ts-node server/index.ts"
+    "start:mock": "ts-node server/index.ts",
+    "nodemon": "nodemon"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/node": "^10.12.18",
     "morgan": "^1.9.1",
+    "nodemon": "^1.18.10",
     "typescript": "^3.2.2"
   }
 }

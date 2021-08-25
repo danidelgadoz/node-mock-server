@@ -1,16 +1,10 @@
 export class HttpResponse {
-    public success(response: any) {
-        return {
-            response: response,
-            errors: []
-        };
+    public success(response?: any) {
+      return response;
     }
 
-    public error(_errors: Array<any>, _response?: any) {
-        return {
-            response: _response || null,
-            errors: _errors
-        };
+    public error(_error?: HttpErrorBody) {
+      return _error;
     }
 }
 
@@ -34,7 +28,7 @@ export class Authorization {
     }
 
     public validateSession(req, res, next): void {
-        if (req.headers['authorization'] === `Bearer ${tokenToForceUnauthorized}`) {
+        if (!req.headers['authorization'] || req.headers['authorization'] === `Bearer ${tokenToForceUnauthorized}`) {
             res.status(401).json();
         } else {
             next();

@@ -10,16 +10,18 @@ router.post('/oauth/token', (req, res) => {
 
     let validCredentialsResponse = require('./data/valid-credentials');
     let badCredentialsResponse = require('./data/bad-credentials');
-    
+
     if (req.body.grant_type === 'refresh_token') {
         res.status(200).json(validCredentialsResponse);
 
     } else {
-        switch (req.body.username) {
-            case 'invalid@gmail.com':
-                res.status(401).json(badCredentialsResponse);
+        switch (req.body.email) {
+            case 'invalid@example.com':
+                setTimeout(() => {
+                  res.status(401).json(badCredentialsResponse);
+                }, 500)
                 break;
-            case 'refesh@gmail.com':
+            case 'refesh@example.com':
                 const response = Object.assign({}, validCredentialsResponse)
                 response['access_token'] = auth.tokenToForceUnauthorized;
                 res.status(200).json(response);
@@ -27,7 +29,7 @@ router.post('/oauth/token', (req, res) => {
             default:
             setTimeout(() => {
                 res.status(200).json(validCredentialsResponse);
-            }, 0)
+            }, 3000)
         }
     }
 });

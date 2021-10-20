@@ -4,7 +4,7 @@
   "description": "mockserver test",
   "main": "index.js",
   "scripts": {
-    "start:mock": "ts-node server/index.ts",
+    "start": "node server/index.js",
     "nodemon": "nodemon"
   },
   "author": "",

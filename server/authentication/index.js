@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { Authorization } from '../global';
+const express = require('express');
+const { Authorization } = require('../global');
 
-const router = Router();
+const router = express.Router();
 const auth = new Authorization();
 
 router.post('/oauth/token', (req, res) => {
@@ -18,7 +18,7 @@ router.post('/oauth/token', (req, res) => {
         switch (req.body.email) {
             case 'invalid@example.com':
                 setTimeout(() => {
-                  res.status(401).json(badCredentialsResponse);
+                    res.status(401).json(badCredentialsResponse);
                 }, 500)
                 break;
             case 'refesh@example.com':
@@ -27,9 +27,9 @@ router.post('/oauth/token', (req, res) => {
                 res.status(200).json(response);
                 break;
             default:
-            setTimeout(() => {
-                res.status(200).json(validCredentialsResponse);
-            }, 3000)
+                setTimeout(() => {
+                    res.status(200).json(validCredentialsResponse);
+                }, 3000)
         }
     }
 });

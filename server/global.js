@@ -1,17 +1,17 @@
-export class HttpResponse {
-    public success(response?: any) {
-      return response;
+class HttpResponse {
+    success(response) {
+        return response;
     }
 
-    public error(_error?: HttpErrorBody) {
-      return _error;
+    error(_error) {
+        return _error;
     }
 }
 
-export class HttpErrorBody {
-    code: string;
-    message: string;
-    title: string;
+class HttpErrorBody {
+    code;
+    message;
+    title;
 
     constructor() {
         this.code = '';
@@ -22,12 +22,12 @@ export class HttpErrorBody {
 
 const tokenToForceUnauthorized = '66666666-6666-6666-6666-666666666666';
 
-export class Authorization {
+class Authorization {
     get tokenToForceUnauthorized() {
         return tokenToForceUnauthorized;
     }
 
-    public validateSession(req, res, next): void {
+    validateSession(req, res, next) {
         if (!req.headers['authorization'] || req.headers['authorization'] === `Bearer ${tokenToForceUnauthorized}`) {
             res.status(401).json();
         } else {
@@ -36,3 +36,9 @@ export class Authorization {
     }
 }
 
+module.exports = {
+    HttpResponse,
+    HttpErrorBody,
+    Authorization,
+    tokenToForceUnauthorized
+};

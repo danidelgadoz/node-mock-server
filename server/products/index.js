@@ -1,12 +1,13 @@
-import { Router } from 'express';
-import { HttpErrorBody, HttpResponse, Authorization } from '../global';
-import { v4 as uuid } from 'uuid';
+const express = require('express');
+const { HttpErrorBody, HttpResponse, Authorization } = require('../global');
 
-const router = Router();
+const uuid = require('uuid');
+
+const router = express.Router();
 const httpResponse = new HttpResponse();
 const auth = new Authorization();
 
-let PRODUCTS: any[] = require("./data");
+let PRODUCTS = require("./data");
 // auth.validateSession
 router.get('/products/', (req, res) => {
   res.json(httpResponse.success(PRODUCTS));
@@ -24,7 +25,7 @@ router.get('/products/:id', (req, res) => {
 
 router.post('/products', (req, res) => {
   const newModel = {
-    id: uuid(),
+    id: uuid.v4(),
     ...req.body
   };
 
